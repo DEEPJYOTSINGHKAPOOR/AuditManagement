@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Authorization_Service</name>
+    </assembly>
+    <members>
+        <member name="M:Authorization_Service.Controllers.UsersController.Authenticate(Authorization_Service.Models.AuthenticationModel)">
+            <summary>
+            will return token
+            </summary>
+            <param name="model">Authentication Model-contains username and password</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

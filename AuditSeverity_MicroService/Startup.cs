@@ -35,6 +35,10 @@ namespace AuditSeverity_MicroService
 
             services.AddScoped<IAuditSeverityRepository, AuditSeverityRepository>();
 
+
+
+            services.AddHttpClient();
+
             services.AddAutoMapper(typeof(AuditSeverityMappings));
             services.AddControllers();
             services.AddHttpClient();

@@ -8,6 +8,6 @@ namespace AuditSeverity_MicroService.Repository.IRepository
 {
     public interface IAuditSeverityRepository
     {
-        public Task<AuditResponseModel> Manipulate(AuditRequestModel auditRequestModel);
+        public Task<AuditResponseModel> Manipulate(AuditRequestModel auditRequestModel, string token);
     }
 }

@@ -6,6 +6,7 @@ using Global_MicroService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace AuditChecklist_MicroService.Repository
@@ -14,6 +15,8 @@ namespace AuditChecklist_MicroService.Repository
     {
         //private readonly ApplicationDbContext _db;
         private readonly IAuditChecklistProvider _provider;
+        
+
         public AuditChecklistRepository(IAuditChecklistProvider provider)
         {
             _provider = provider;

@@ -1,10 +1,10 @@
 {
   "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
+    "windowsAuthentication": true,
+    "anonymousAuthentication": false,
     "iisExpress": {
-      "applicationUrl": "http://localhost:54096",
-      "sslPort": 44381
+      "applicationUrl": "http://localhost:44166",
+      "sslPort": 44366
     }
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",
@@ -17,14 +17,14 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "AuditChecklist_MicroService": {
+    "Authorization_Service": {
       "commandName": "Project",
       "launchBrowser": true,
-      //"launchUrl": "api/auditchecklist/",
+      //"launchUrl": "weatherforecast",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:5004;http://localhost:5005"
+      "applicationUrl": "https://localhost:5007;http://localhost:5008"
     },
     "Docker": {
       "commandName": "Docker",

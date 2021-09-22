@@ -4,11 +4,18 @@
         <name>AuditSeverity_MicroService</name>
     </assembly>
     <members>
-        <member name="M:AuditSeverity_MicroService.Controllers.AuditSeverityController.AuditSeverity(Global_MicroService.Dtos.AuditRequestDto)">
+        <member name="M:AuditSeverity_MicroService.Controllers.AuditSeverityController.AuditSeverity(System.String,Global_MicroService.Dtos.AuditRequestDto)">
             <summary>
             Post The AuditRequestDto and Get AuditResponseDto object in response!
             </summary>
             <param name="auditRequestDto">AuditRequestDto Object</param>
+            <returns></returns>
+        </member>
+        <member name="M:AuditSeverity_MicroService.Controllers.AuditSeverityController.GetAuditSeverity(System.Int32)">
+            <summary>
+            To be implemented later
+            </summary>
+            <param name="auditId"></param>
             <returns></returns>
         </member>
     </members>

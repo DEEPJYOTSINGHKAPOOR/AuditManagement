@@ -18,6 +18,8 @@ using System.Threading.Tasks;
 using AuditChecklist_MicroService.Repository;
 using AuditChecklist_MicroService.Repository.IRepository;
 using AuditChecklist_MicroService.Provider;
+using System.Reflection;
+using System.IO;
 
 namespace AuditChecklist_MicroService
 {
@@ -38,10 +40,26 @@ namespace AuditChecklist_MicroService
             //    (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IAuditChecklistProvider, AuditChecklistProvider>();
+            services.AddScoped<IAuditChecklistRepository, AuditChecklistRepository>();
 
+            services.AddHttpClient();
 
             services.AddAutoMapper(typeof(AuditChecklistMappings));
+            services.AddSwaggerGen(options => {
+                options.SwaggerDoc("AuditCheckListOpenApiSpec",
+                    new Microsoft.OpenApi.Models.OpenApiInfo()
+                    {
+                        Title = "AuditCheckList Api",
+                        Version = "1",
+                        Description = "Audit Checklist will be triggered from Web APP"
 
+                    }
+                    );
+                var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var cmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
+
+                options.IncludeXmlComments(cmlCommentsFullPath);
+            });
 
             services.AddControllers();
 
@@ -56,6 +74,12 @@ namespace AuditChecklist_MicroService
             }
 
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options => {
+                options.SwaggerEndpoint("/swagger/AuditCheckListOpenApiSpec/swagger.json", "AuditCheckListOpenApiSpec");
+                options.RoutePrefix = "";
+            });
 
             app.UseRouting();
 

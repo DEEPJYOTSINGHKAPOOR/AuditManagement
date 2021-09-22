@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace AuditSeverity_MicroService.Repository
@@ -18,12 +19,14 @@ namespace AuditSeverity_MicroService.Repository
         {
             _clientFactory = clientFactory;
         }
-        public async Task<AuditResponseModel> Manipulate(AuditRequestModel auditRequestModel)
+        public async Task<AuditResponseModel> Manipulate(AuditRequestModel auditRequestModel, string token)
         {
             Console.WriteLine("Url is:"+ Urls.AuditBenchmark + ((int)auditRequestModel.auditDetail.AuditType));
             var request = new HttpRequestMessage(HttpMethod.Get, Urls.AuditBenchmark + ((int)auditRequestModel.auditDetail.AuditType));
 
             var client = _clientFactory.CreateClient();
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",token);
 
             HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
 
@@ -107,3 +110,8 @@ namespace AuditSeverity_MicroService.Repository
 
    
 }
+/*
+ * Authorization microservice
+ *  /login:generating the token ....no authorize bcoz it will generate the token...it's anonymous
+ *  /authentication : => will take token as input header and [Authorize]
+ * */
