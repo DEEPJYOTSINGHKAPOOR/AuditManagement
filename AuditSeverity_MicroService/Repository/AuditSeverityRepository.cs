@@ -1,7 +1,9 @@
 ﻿using AuditSeverity_MicroService.Repository.IRepository;
+using AuditSeverity_MicroService.Services;
 using Global_MicroService.Const;
 using Global_MicroService.Dtos;
 using Global_MicroService.Enums;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,14 +17,20 @@ namespace AuditSeverity_MicroService.Repository
     public class AuditSeverityRepository : IAuditSeverityRepository
     {
         private readonly IHttpClientFactory _clientFactory;
-        public AuditSeverityRepository(IHttpClientFactory clientFactory )
+
+        private readonly IOptions<MyAppSettings> _options;
+        public AuditSeverityRepository(IHttpClientFactory clientFactory , IOptions<MyAppSettings> options )
         {
             _clientFactory = clientFactory;
+            _options = options; 
         }
         public async Task<AuditResponseModel> Manipulate(AuditRequestModel auditRequestModel, string token)
         {
-            Console.WriteLine("Url is:"+ Urls.AuditBenchmark + ((int)auditRequestModel.auditDetail.AuditType));
-            var request = new HttpRequestMessage(HttpMethod.Get, Urls.AuditBenchmark + ((int)auditRequestModel.auditDetail.AuditType));
+            //Console.WriteLine("Url is:"+ Urls.AuditBenchmark + ((int)auditRequestModel.auditDetail.AuditType));
+
+            string url = _options.Value.ExternalUrl.AuditBenchmark;
+
+            var request = new HttpRequestMessage(HttpMethod.Get, url + ((int)auditRequestModel.auditDetail.AuditType));
 
             var client = _clientFactory.CreateClient();
 

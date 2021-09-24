@@ -13,6 +13,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace Authorization_Service
@@ -42,18 +45,18 @@ namespace Authorization_Service
 
 
             //API Versioning
-            services.AddApiVersioning(options =>
-            {
-                options.AssumeDefaultVersionWhenUnspecified = true;
-                options.DefaultApiVersion = new ApiVersion(1, 0);
-                options.ReportApiVersions = true;
-            });
-            services.AddVersionedApiExplorer(options => options.GroupNameFormat = "'v'VVV");
+            //services.AddApiVersioning(options =>
+            //{
+            //    options.AssumeDefaultVersionWhenUnspecified = true;
+            //    options.DefaultApiVersion = new ApiVersion(1, 0);
+            //    options.ReportApiVersions = true;
+            //});
+            //services.AddVersionedApiExplorer(options => options.GroupNameFormat = "'v'VVV");
 
 
             //SWAGGER DOCUMENTATION
-            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-            services.AddSwaggerGen();
+            //services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+            //services.AddSwaggerGen();
 
 
             // AUTHENTICATION
@@ -80,7 +83,8 @@ namespace Authorization_Service
                 };
             });
 
-            //services.AddSwaggerGen(options => {
+            //services.AddSwaggerGen(options =>
+            //{
             //    options.SwaggerDoc("AuthorizationOpenApiSpec",
             //        new Microsoft.OpenApi.Models.OpenApiInfo()
             //        {
@@ -102,7 +106,7 @@ namespace Authorization_Service
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider  provider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -111,15 +115,15 @@ namespace Authorization_Service
 
             app.UseHttpsRedirection();
 
-            app.UseSwagger();
+            //app.UseSwagger();
 
-            app.UseSwaggerUI(options => {
-                foreach (var desc in provider.ApiVersionDescriptions)
-                    options.SwaggerEndpoint($"/swagger/{desc.GroupName}/swagger.json",
-                        desc.GroupName.ToUpperInvariant());
-                //options.SwaggerEndpoint("/swagger/AuthorizationOpenApiSpec/swagger.json", "Authorization Api");
-                options.RoutePrefix = "";
-            });
+            //app.UseSwaggerUI(options => {
+            //    //foreach (var desc in provider.ApiVersionDescriptions)
+            //    //    options.SwaggerEndpoint($"/swagger/{desc.GroupName}/swagger.json",
+            //    //        desc.GroupName.ToUpperInvariant());
+            //    //options.SwaggerEndpoint("/swagger/AuthorizationOpenApiSpec/swagger.json", "Authorization Api");
+            //    options.RoutePrefix = "";
+            //});
 
             app.UseRouting();
             app.UseCors(x=>x

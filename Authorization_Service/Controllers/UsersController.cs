@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 namespace Authorization_Service.Controllers
 {
 
-    [Authorize]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     // [ApiExplorerSettings(GroupName ="AuditAuthorizationOpenApiSpec")]
     public class UsersController : ControllerBase
@@ -23,16 +22,28 @@ namespace Authorization_Service.Controllers
         }
 
 
-      
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
 
-        [HttpPost]
+        [HttpPost("CheckWhetherAuthorizedOrNot")]
         [Authorize]
         [Route("~/api/Users/CheckWhetherAuthorizedOrNot")]
+
         public IActionResult CheckWhetherAuthorizedOrNot()
         {
 
             return Ok();
         }
+
+
+        //[HttpPost("Sample")]
+        //[Authorize]
+        //public IActionResult Sample()
+        //{
+        //    return Ok("All good");
+        //}
 
 
         /// <summary>
@@ -41,10 +52,11 @@ namespace Authorization_Service.Controllers
         /// <param name="model">Authentication Model-contains username and password</param>
         /// <returns></returns>
         [AllowAnonymous]
-        [HttpPost("authenticate")]
+        [HttpPost("Authenticate")]
+        [Route("~/api/Users/Authenticate")]
         public IActionResult Authenticate([FromBody] AuthenticationModel model)
         {
-            if(model == null)
+            if (model == null)
             {
                 return BadRequest();
             }
@@ -56,24 +68,25 @@ namespace Authorization_Service.Controllers
             return Ok(user);
         }
 
-        [AllowAnonymous]
-        [HttpPost("register")]
-        [Route("~/api/Users/register")]
-        public IActionResult Register([FromBody] AuthenticationModel model)
-        {
-            bool ifUserNameUnique = _userRepository.isUserUnique(model.Username);
-            if (!ifUserNameUnique)
-            {
-                return BadRequest(new { message = "Username already exists" });
-            }
-            var user = _userRepository.Register(model.Username, model.Password);
+        //[AllowAnonymous]
+        //[HttpPost("register")]
+        //[Route("~/api/Users/register")]
 
-            if (user == null)
-            {
-                return BadRequest(new { message = "Error while registering" });
-            }
+        //public IActionResult Register([FromBody] AuthenticationModel model)
+        //{
+        //    bool ifUserNameUnique = _userRepository.isUserUnique(model.Username);
+        //    if (!ifUserNameUnique)
+        //    {
+        //        return BadRequest(new { message = "Username already exists" });
+        //    }
+        //    var user = _userRepository.Register(model.Username, model.Password);
 
-            return Ok();
-        }
+        //    if (user == null)
+        //    {
+        //        return BadRequest(new { message = "Error while registering" });
+        //    }
+
+        //    return Ok();
+        //}
     }
 }

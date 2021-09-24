@@ -20,6 +20,7 @@ using AuditChecklist_MicroService.Repository.IRepository;
 using AuditChecklist_MicroService.Provider;
 using System.Reflection;
 using System.IO;
+using AuditChecklist_MicroService.Services;
 
 namespace AuditChecklist_MicroService
 {
@@ -39,10 +40,19 @@ namespace AuditChecklist_MicroService
             //services.AddDbContext<ApplicationDbContext>
             //    (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+
+            services.Configure<MyAppSettings>(Configuration.GetSection(MyAppSettings.SectionName));
+            services.AddOptions();
+
+
             services.AddScoped<IAuditChecklistProvider, AuditChecklistProvider>();
             services.AddScoped<IAuditChecklistRepository, AuditChecklistRepository>();
 
             services.AddHttpClient();
+
+
+
+
 
             services.AddAutoMapper(typeof(AuditChecklistMappings));
             services.AddSwaggerGen(options => {
@@ -84,6 +94,7 @@ namespace AuditChecklist_MicroService
             app.UseRouting();
 
             app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {

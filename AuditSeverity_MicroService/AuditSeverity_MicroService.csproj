@@ -24,9 +24,5 @@
     <ProjectReference Include="..\Global_MicroService\Global_MicroService.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Logs\" />
-  </ItemGroup>
-
 
 </Project>

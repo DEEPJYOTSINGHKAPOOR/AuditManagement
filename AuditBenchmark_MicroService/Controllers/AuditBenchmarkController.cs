@@ -1,8 +1,8 @@
-﻿using Global_MicroService.Const;
+﻿using AuditBenchmark_MicroService.Services;
 using Global_MicroService.Dtos;
 using Global_MicroService.Enums;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -17,11 +17,12 @@ namespace AuditBenchmark_MicroService.Controllers
     public class AuditBenchmarkController : ControllerBase
     {
         private readonly IHttpClientFactory _clientFactory;
+        private readonly IOptions<MyAppSettings> _options;
 
-
-        public AuditBenchmarkController(IHttpClientFactory clientFactory)
+        public AuditBenchmarkController(IHttpClientFactory clientFactory, IOptions<MyAppSettings> options)
         {
             _clientFactory = clientFactory;
+            _options = options; 
         }
 
         private async Task<HttpResponseMessage> CheckTokenValidity(string scheme, string token)
@@ -31,7 +32,11 @@ namespace AuditBenchmark_MicroService.Controllers
                 var client = _clientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                var request = new HttpRequestMessage(HttpMethod.Post, Urls.AuthenticatedOrNot);
+                //string url = "https://localhost:44366/api/Users/Sample/";
+
+                string url = _options.Value.ExternalUrl.Authorization; 
+
+                var request = new HttpRequestMessage(HttpMethod.Post, url);
                 HttpResponseMessage response = await client.SendAsync(request);
 
                 return response;
@@ -46,6 +51,7 @@ namespace AuditBenchmark_MicroService.Controllers
         [HttpGet(Name = "GetAuditBenchmark")]
         public async Task<IActionResult> GetAuditBenchmarks([FromHeader] string authorization)
         {
+            string url = _options.Value.ExternalUrl.Authorization;
 
             if (AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
             {

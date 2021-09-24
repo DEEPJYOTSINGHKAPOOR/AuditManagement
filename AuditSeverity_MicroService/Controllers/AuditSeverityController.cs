@@ -1,13 +1,11 @@
 ﻿using AuditSeverity_MicroService.Logger;
 using AuditSeverity_MicroService.Repository.IRepository;
+using AuditSeverity_MicroService.Services;
 using AutoMapper;
 using Global_MicroService.Const;
 using Global_MicroService.Dtos;
-using Global_MicroService.Enums;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -19,35 +17,40 @@ namespace AuditSeverity_MicroService.Controllers
     [ApiController]
     public class AuditSeverityController : ControllerBase
     {
-
         private readonly IAuditSeverityRepository _repo;
         private readonly IMapper _mapper;
         private readonly ILoggerManager _logger;
         private readonly IHttpClientFactory _clientFactory;
+        private readonly IOptions<MyAppSettings> _options;
 
-        public AuditSeverityController(IAuditSeverityRepository repo, IMapper mapper, ILoggerManager logger,IHttpClientFactory clientFactory)
+        public AuditSeverityController(IAuditSeverityRepository repo, IMapper mapper, ILoggerManager logger,IHttpClientFactory clientFactory, IOptions<MyAppSettings> options)
         {
             _repo = repo;
             _mapper = mapper;
             _logger = logger;
             _clientFactory = clientFactory;
+            _options = options;
         }
 
         private async Task<HttpResponseMessage> CheckTokenValidity(string scheme, string token)
         {
+            string authUrl = _options.Value.ExternalUrl.Authorization;
+
             if (token != null && token.Length != 0)
             {
                 var client = _clientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                var request = new HttpRequestMessage(HttpMethod.Post, Urls.AuthenticatedOrNot);
+                var request = new HttpRequestMessage(HttpMethod.Post, authUrl);
                 HttpResponseMessage response = await client.SendAsync(request);
 
                 return response;
             }
             else
             {
-                return null;
+                HttpResponseMessage response = new HttpResponseMessage();
+                response.StatusCode = HttpStatusCode.Unauthorized;
+                return response;
             }
         }
 
@@ -59,9 +62,12 @@ namespace AuditSeverity_MicroService.Controllers
         /// </summary>
         /// <param name="auditRequestDto">AuditRequestDto Object</param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost("AuditSeverity")]
         public async Task<IActionResult> AuditSeverity([FromHeader] string authorization ,[FromBody] AuditRequestDto auditRequestDto)
         {
+
+            string authUrl = _options.Value.ExternalUrl.Authorization;
+
             if (auditRequestDto == null)
             {
                 return BadRequest(ModelState);
@@ -82,11 +88,6 @@ namespace AuditSeverity_MicroService.Controllers
             else if (authorization == null) {
                 return Unauthorized("Please provide authorization token!");
             }
-
-
-
-
-
             //_logger.LogInformation(auditRequestDto.auditDetail.AuditType.ToString());
             var auditRequestModle = _mapper.Map<AuditRequestModel>(auditRequestDto);
 

@@ -1,6 +1,7 @@
 using AuditSeverity_MicroService.Logger;
 using AuditSeverity_MicroService.Repository;
 using AuditSeverity_MicroService.Repository.IRepository;
+using AuditSeverity_MicroService.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -36,6 +37,9 @@ namespace AuditSeverity_MicroService
             services.AddScoped<IAuditSeverityRepository, AuditSeverityRepository>();
 
 
+            services.AddOptions();
+
+            services.Configure<MyAppSettings>(Configuration.GetSection(MyAppSettings.SectionName));
 
             services.AddHttpClient();
 
